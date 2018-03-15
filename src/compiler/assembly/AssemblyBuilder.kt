@@ -8,25 +8,29 @@ import java.io.PrintStream
  * @author Moklev Vyacheslav
  */
 class AssemblyBuilder {
-    val list = arrayListOf<Either<AssemblyInstruction, Either<String, String>>>()
+    val list = arrayListOf<AssemblyElement>()
     
     fun label(name: String) {
-        list.add(Right(Left(name)))
+        list.add(AssemblyElement.Label(name))
     }
     
     fun metainfo(name: String) {
-        list.add(Right(Right(name)))
+        list.add(AssemblyElement.Metainfo(name))
     }
     
     fun print(stream: PrintStream) {
         list.forEach {
             when (it) {
-                is Left -> stream.println("\t" + it.value)
-                is Right -> when (it.value) {
-                    is Left -> stream.println(it.value.value + ":")
-                    is Right -> stream.println(it.value.value)
-                }
+                is AssemblyElement.Instruction -> stream.println("\t" + it.value)
+                is AssemblyElement.Label -> stream.println(it.value + ":")
+                is AssemblyElement.Metainfo -> stream.println(it.value)
             }
         }
+    }
+
+    sealed class AssemblyElement {
+        class Instruction(val value: AssemblyInstruction) : AssemblyElement()
+        class Label(val value: String) : AssemblyElement()
+        class Metainfo(val value: String) : AssemblyElement()
     }
 }
