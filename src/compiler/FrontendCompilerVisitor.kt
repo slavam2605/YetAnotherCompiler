@@ -25,12 +25,11 @@ class FrontendCompilerVisitor(val trace: DataTrace, val builder: IrBuilder) : Ab
         val a = visitExpr(ctx.e1)
         val b = visitExpr(ctx.e2)
         with (builder) {
-            val temp = tempVar()
-            when (ctx.op.text) {
-                "+" -> add(temp, a, b)
-                "-" -> sub(temp, a, b)
+            return when (ctx.op.text) {
+                "+" -> add(a, b)
+                "-" -> sub(a, b)
+                else -> error("Unknown op: ${ctx.op.text}")
             }
-            return temp
         }
     }
 
@@ -38,13 +37,12 @@ class FrontendCompilerVisitor(val trace: DataTrace, val builder: IrBuilder) : Ab
         val a = visitExpr(ctx.e1)
         val b = visitExpr(ctx.e2)
         with (builder) {
-            val temp = tempVar()
-            when (ctx.op.text) {
-                "*" -> mul(temp, a, b)
-                "/" -> div(temp, a, b)
-                "%" -> mod(temp, a, b)
+            return when (ctx.op.text) {
+                "*" -> mul(a, b)
+                "/" -> div(a, b)
+                "%" -> mod(a, b)
+                else -> error("Unknown op: ${ctx.op.text}")
             }
-            return temp
         }
     }
 
@@ -61,9 +59,7 @@ class FrontendCompilerVisitor(val trace: DataTrace, val builder: IrBuilder) : Ab
                 ?: throw Exception("Unknown function")
         val singleDescriptor = descriptors.single()
         with (builder) {
-            val temp = tempVar()
-            callval(singleDescriptor.name, temp)
-            return temp
+            return callval(singleDescriptor.name)
         }
     }
 

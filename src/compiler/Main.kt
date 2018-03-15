@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
     val ctx = parser.file()
     val trace = DataTrace()
     val assemblyBuilder = AssemblyBuilder()
-    val irBuilder = IrBuilder()
+    val irBuilder = IrBuilder(trace)
     val writer = PrintStream("out.s")
     DescriptorsVisitor(trace).visitFile(ctx)
 

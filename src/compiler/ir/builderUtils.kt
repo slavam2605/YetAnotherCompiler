@@ -10,33 +10,42 @@ fun IrBuilder.ret() {
 }
 
 fun IrBuilder.retval(operand: IrOperand) {
-    val type = OperandType.Unknown
-    list.add(Instruction(RetValInstruction(type, operand)))
+    list.add(Instruction(RetValInstruction(operand.type, operand)))
 }
 
-fun IrBuilder.add(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
-    val type = OperandType.Unknown
+fun IrBuilder.add(operand1: IrOperand, operand2: IrOperand): VariableOperand {
+    val type = IrTypeUtils.add(operand1.type, operand2.type)
+    val result = tempVar(type)
     list.add(Instruction(AddInstruction(type, result, operand1, operand2)))
+    return result
 }
 
-fun IrBuilder.sub(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
-    val type = OperandType.Unknown
+fun IrBuilder.sub(operand1: IrOperand, operand2: IrOperand): VariableOperand {
+    val type = IrTypeUtils.sub(operand1.type, operand2.type)
+    val result = tempVar(type)
     list.add(Instruction(SubInstruction(type, result, operand1, operand2)))
+    return result
 }
 
-fun IrBuilder.mul(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
-    val type = OperandType.Unknown
+fun IrBuilder.mul(operand1: IrOperand, operand2: IrOperand): VariableOperand {
+    val type = IrTypeUtils.mul(operand1.type, operand2.type)
+    val result = tempVar(type)
     list.add(Instruction(MulInstruction(type, result, operand1, operand2)))
+    return result
 }
 
-fun IrBuilder.div(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
-    val type = OperandType.Unknown
+fun IrBuilder.div(operand1: IrOperand, operand2: IrOperand): VariableOperand {
+    val type = IrTypeUtils.div(operand1.type, operand2.type)
+    val result = tempVar(type)
     list.add(Instruction(DivInstruction(type, result, operand1, operand2)))
+    return result
 }
 
-fun IrBuilder.mod(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
-    val type = OperandType.Unknown
+fun IrBuilder.mod(operand1: IrOperand, operand2: IrOperand): VariableOperand {
+    val type = IrTypeUtils.mod(operand1.type, operand2.type)
+    val result = tempVar(type)
     list.add(Instruction(ModInstruction(type, result, operand1, operand2)))
+    return result
 }
 
 fun IrBuilder.call(name: String, vararg operands: IrOperand) {
@@ -44,7 +53,10 @@ fun IrBuilder.call(name: String, vararg operands: IrOperand) {
     list.add(Instruction(CallInstruction(LabelOperand(name), returnType, *operands)))
 }
 
-fun IrBuilder.callval(name: String, result: IrOperand, vararg operands: IrOperand) {
-    val returnType = OperandType.Unknown
+fun IrBuilder.callval(name: String, vararg operands: IrOperand): VariableOperand {
+    val returnType = trace.functionDescriptors.get(name)?.singleOrNull()?.irType
+            ?: OperandType.Unknown
+    val result = tempVar(returnType)
     list.add(Instruction(CallValInstruction(LabelOperand(name), returnType, result, *operands)))
+    return result
 }

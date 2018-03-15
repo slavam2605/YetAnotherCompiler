@@ -1,16 +1,17 @@
 package compiler.ir
 
+import compiler.DataTrace
 import java.io.PrintStream
 
 /**
  * @author Moklev Vyacheslav
  */
-class IrBuilder {
+class IrBuilder(val trace: DataTrace) {
     val list = arrayListOf<IrElement>()
     private var varCounter: Int = 0
 
-    fun tempVar(): VariableOperand {
-        val operand = VariableOperand("%$varCounter")
+    fun tempVar(type: OperandType): VariableOperand {
+        val operand = VariableOperand("%$varCounter", type)
         varCounter++
         return operand
     }
