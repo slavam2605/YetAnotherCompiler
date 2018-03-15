@@ -7,6 +7,13 @@ import java.io.PrintStream
  */
 class IrBuilder {
     val list = arrayListOf<IrElement>()
+    private var varCounter: Int = 0
+
+    fun tempVar(): VariableOperand {
+        val operand = VariableOperand("%$varCounter")
+        varCounter++
+        return operand
+    }
 
     fun label(name: String) {
         list.add(IrElement.Label(name))

@@ -9,30 +9,42 @@ fun IrBuilder.ret() {
     list.add(Instruction(RetInstruction))
 }
 
-fun IrBuilder.retval(type: OperandType, operand: IrOperand) {
+fun IrBuilder.retval(operand: IrOperand) {
+    val type = OperandType.Unknown
     list.add(Instruction(RetValInstruction(type, operand)))
 }
 
-fun IrBuilder.add(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+fun IrBuilder.add(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+    val type = OperandType.Unknown
     list.add(Instruction(AddInstruction(type, result, operand1, operand2)))
 }
 
-fun IrBuilder.sub(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+fun IrBuilder.sub(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+    val type = OperandType.Unknown
     list.add(Instruction(SubInstruction(type, result, operand1, operand2)))
 }
 
-fun IrBuilder.mul(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+fun IrBuilder.mul(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+    val type = OperandType.Unknown
     list.add(Instruction(MulInstruction(type, result, operand1, operand2)))
 }
 
-fun IrBuilder.div(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+fun IrBuilder.div(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+    val type = OperandType.Unknown
     list.add(Instruction(DivInstruction(type, result, operand1, operand2)))
 }
 
-fun IrBuilder.call(returnType: OperandType, vararg operands: IrOperand) {
-    list.add(Instruction(CallInstruction(returnType, *operands)))
+fun IrBuilder.mod(result: IrOperand, operand1: IrOperand, operand2: IrOperand) {
+    val type = OperandType.Unknown
+    list.add(Instruction(ModInstruction(type, result, operand1, operand2)))
 }
 
-fun IrBuilder.callval(returnType: OperandType, result: IrOperand, vararg operands: IrOperand) {
-    list.add(Instruction(CallValInstruction(returnType, result, *operands)))
+fun IrBuilder.call(name: String, vararg operands: IrOperand) {
+    val returnType = OperandType.Unknown
+    list.add(Instruction(CallInstruction(LabelOperand(name), returnType, *operands)))
+}
+
+fun IrBuilder.callval(name: String, result: IrOperand, vararg operands: IrOperand) {
+    val returnType = OperandType.Unknown
+    list.add(Instruction(CallValInstruction(LabelOperand(name), returnType, result, *operands)))
 }

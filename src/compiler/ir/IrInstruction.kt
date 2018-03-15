@@ -18,16 +18,19 @@ class AddInstruction(type: OperandType, result: IrOperand, operand1: IrOperand, 
     : IrInstruction("add", type, result, operand1, operand2)
 
 class SubInstruction(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand)
-    : IrInstruction("add", type, result, operand1, operand2)
+    : IrInstruction("sub", type, result, operand1, operand2)
 
 class MulInstruction(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand)
-    : IrInstruction("add", type, result, operand1, operand2)
+    : IrInstruction("mul", type, result, operand1, operand2)
 
 class DivInstruction(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand)
-    : IrInstruction("add", type, result, operand1, operand2)
+    : IrInstruction("div", type, result, operand1, operand2)
 
-class CallInstruction(returnType: OperandType, vararg operands: IrOperand)
-    : IrInstruction("call", returnType, *operands)
+class ModInstruction(type: OperandType, result: IrOperand, operand1: IrOperand, operand2: IrOperand)
+    : IrInstruction("mod", type, result, operand1, operand2)
 
-class CallValInstruction(returnType: OperandType, result: IrOperand, vararg operands: IrOperand)
-    : IrInstruction("callval", returnType, result, *operands)
+class CallInstruction(func: LabelOperand, returnType: OperandType, vararg operands: IrOperand)
+    : IrInstruction("call", returnType, func, *operands)
+
+class CallValInstruction(func: LabelOperand, returnType: OperandType, result: IrOperand, vararg operands: IrOperand)
+    : IrInstruction("callval", returnType, func, result, *operands)

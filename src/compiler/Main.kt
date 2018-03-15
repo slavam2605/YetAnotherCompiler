@@ -1,6 +1,7 @@
 package compiler
 
 import compiler.assembly.AssemblyBuilder
+import compiler.ir.IrBuilder
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import parser.MainLexer
@@ -28,9 +29,14 @@ fun main(args: Array<String>) {
 
     val ctx = parser.file()
     val trace = DataTrace()
-    val builder = AssemblyBuilder()
+    val assemblyBuilder = AssemblyBuilder()
+    val irBuilder = IrBuilder()
     val writer = PrintStream("out.s")
     DescriptorsVisitor(trace).visitFile(ctx)
-    CompilerVisitor(trace, builder).visitFile(ctx)
-    builder.print(writer)
+
+    FrontendCompilerVisitor(trace, irBuilder).visitFile(ctx)
+    irBuilder.print(System.out)
+
+    CompilerVisitor(trace, assemblyBuilder).visitFile(ctx)
+    assemblyBuilder.print(writer)
 }
